@@ -1,0 +1,5 @@
+<launch>
+    <node pkg="package_name_template" type="node_name_template_main" name="node_name_template" output="screen">
+            <rosparam command="load" file="$(find package_name_template)/config/node_name_template_config.yaml" />
+    </node>
+</launch>

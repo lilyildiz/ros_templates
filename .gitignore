@@ -1,0 +1,7 @@
+devel/
+logs/
+build/
+*.pyc
+.catkin_workspace
+.vscode
+*.bag
