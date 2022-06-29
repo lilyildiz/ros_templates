@@ -1,7 +1,7 @@
 #include <ros/ros.h>
 #include "node_name_template.h"
 
-int main(int argc , char **argv) 
+int main(int argc, char **argv)
 {
     ros::init(argc, argv, "node_name_template");
     ros::NodeHandle node_handle("~");

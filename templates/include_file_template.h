@@ -5,14 +5,14 @@
 
 namespace namespace_template
 {
-class class_name_template
-{
+  class class_name_template
+  {
   public:
     /*!
      * Constructor.
      * @param nodeHandle the ROS node handle.
      */
-    class_name_template(ros::NodeHandle& t_node_handle);
+    class_name_template(ros::NodeHandle &t_node_handle);
 
   private:
     /*!
@@ -25,10 +25,10 @@ class class_name_template
      * Odometry callback method.
      * @param t_Odom the received message.
      */
-    void subCallback(const std_msgs::String& t_msg);
+    void subCallback(const std_msgs::String &t_msg);
 
     //! ROS node handle.
-    ros::NodeHandle& m_node_handle;
+    ros::NodeHandle &m_node_handle;
 
     //! Input topic name.
     std::string m_input_topic;
@@ -41,7 +41,6 @@ class class_name_template
 
     //! Output publisher.
     ros::Publisher m_output_pub;
+  };
 
-};
-
-}  // namespace namespace_template
+} // namespace namespace_template
