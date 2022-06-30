@@ -61,18 +61,14 @@ class ROSPackage:
         with open('{}/CMakeLists.txt'.format(self.package_name), 'w') as file:
             file.write(filedata)
 
-        # Read in the file
-        with open('{}/package.xml'.format(self.package_name), 'r') as file:
-            filedata = file.readlines()
         with open('templates/package_template.xml', 'r') as file:
             insertion_data = file.readlines()
-
-        # Replace the target string
-        filedata[53:53] = insertion_data
-
-        # Write the file out again
-        with open('{}/package.xml'.format(self.package_name), 'w') as file:
+        with open('{}/package.xml'.format(self.package_name), 'r+') as file:
+            filedata = file.readlines()
+            filedata[53:53] = insertion_data
+            file.seek(0)
             file.writelines(filedata)
+            
 
     def create_config(self):
         # Read in the file
