@@ -34,7 +34,7 @@ basic_package/
 
 - Support for creating more than 1 node.
 
-- Support for creating more than 1 subscriber or publisher.
+- <del>Support for creating more than 1 subscriber or publisher.</del>
 
 - Support for creating action servers.
 
