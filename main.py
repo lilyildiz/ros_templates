@@ -1,9 +1,9 @@
 import blessed
 import subprocess
-import lib.helpers
+import lib.ROSPackage
 
 term = blessed.Terminal()
-package = lib.helpers.ROSPackage()
+package = lib.ROSPackage.ROSPackage()
 
 print(term.home + term.clear + term.move_y(term.height // 2))
 print(term.black_on_darkkhaki(term.center('welcome to the ros template creater.')))
@@ -26,9 +26,16 @@ print(term.home + term.clear + term.move_y(term.height // 2))
 package.namespace_name = input(term.black_on_darkkhaki(term.center(
     'Please write the name of the namespace you want to create')))
 
+print(term.home + term.clear + term.move_y(term.height // 2))
+package.subscriber_amount = int(input(term.black_on_darkkhaki(term.center(
+    'Please write the number of subscribers you want to create'))))
+
+print(term.home + term.clear + term.move_y(term.height // 2))
+package.publisher_amount = int(input(term.black_on_darkkhaki(term.center(
+    'Please write the number of publishers you want to create'))))
+
 subprocess.run(
     ["cd {}/src ;mkdir {}".format(package.package_name, package.node_name)], shell=True)
-
 
 package.create_node()
 package.edit_package()
