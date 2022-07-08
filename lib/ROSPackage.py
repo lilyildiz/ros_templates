@@ -1,4 +1,6 @@
 import subprocess
+from . import ROSSubscriber
+from . import ROSPublisher
 
 
 class ROSPackage:
@@ -7,6 +9,8 @@ class ROSPackage:
         self.node_name = str()
         self.class_name = str()
         self.namespace_name = str()
+        self.subscriber_amount = int()
+        self.publisher_amount = int()
 
     def fill_template(self, filedata):
         filedata = filedata.replace('package_name_template', self.package_name)
@@ -16,53 +20,59 @@ class ROSPackage:
         return filedata
 
     def create_node(self):
-        # Read in the file
+        sub_include,sub_declaration,callback = self.createSubscribers(self.subscriber_amount)
+        pub_include,pub_declaration = self.createPublishers(self.publisher_amount)
+
+        # Create node file
         with open('templates/node_template.cpp', 'r') as file:
             filedata = file.read()
 
-        # Replace the target string
         filedata = self.fill_template(filedata)
+        filedata = filedata.splitlines()
 
-        # Write the file out again
+        declaration_index = [i for i, s in enumerate(filedata) if '--->Declaration insertion point <---' in s][0]
+        filedata[declaration_index:declaration_index+1] = pub_declaration + sub_declaration
+        callback_index = [i for i, s in enumerate(filedata) if '--->Callback insertion point <---' in s][0]
+        filedata[callback_index:callback_index+1] = callback
+
         with open('{}/src/{}/{}.cpp'.format(self.package_name, self.node_name, self.node_name), 'w') as file:
-            file.write(filedata)
+            file.writelines(self.appendSeperator(filedata))
 
-        # Read in the file
+        # Create main file
         with open('templates/main_template.cpp', 'r') as file:
             filedata = file.read()
 
-        # Replace the target string
         filedata = self.fill_template(filedata)
 
-        # Write the file out again
         with open('{}/src/{}/{}_main.cpp'.format(self.package_name, self.node_name, self.node_name), 'w') as file:
             file.write(filedata)
 
-        # Read in the file
+        # Create include file
         with open('templates/include_file_template.h', 'r') as file:
             filedata = file.read()
 
-        # Replace the target string
         filedata = self.fill_template(filedata)
+        filedata = filedata.splitlines()
+        include_index = [i for i, s in enumerate(filedata) if '--->Include insertion point <---' in s][0]
+        filedata[include_index:include_index+1] = pub_include + sub_include
 
-        # Write the file out again
         with open('{}/include/{}.h'.format(self.package_name, self.node_name), 'w') as file:
-            file.write(filedata)
+            file.writelines(self.appendSeperator(filedata))
 
     def edit_package(self):
-        # Read in the file
+        # Create CMakeLists
         with open('templates/CMakeLists.txt', 'r') as file:
             filedata = file.read()
 
-        # Replace the target string
         filedata = self.fill_template(filedata)
 
-        # Write the file out again
         with open('{}/CMakeLists.txt'.format(self.package_name), 'w') as file:
             file.write(filedata)
 
+        # Create package.xml
         with open('templates/package_template.xml', 'r') as file:
             insertion_data = file.readlines()
+
         with open('{}/package.xml'.format(self.package_name), 'r+') as file:
             filedata = file.readlines()
             filedata[53:53] = insertion_data
@@ -71,16 +81,39 @@ class ROSPackage:
             
 
     def create_config(self):
-        # Read in the file
+        # Create launch
         with open('templates/launch_template.launch', 'r') as file:
             filedata = file.read()
 
-        # Replace the target string
         filedata = self.fill_template(filedata)
 
-        # Write the file out again
         with open('{}/launch/{}_launch.launch'.format(self.package_name, self.node_name), 'w') as file:
             file.write(filedata)
 
+        # Copy .yaml file
         subprocess.run(["cp templates/config_template.yaml {}/config/{}_config.yaml".format(
             self.package_name, self.node_name)], shell=True)
+
+    def createSubscribers(self,number):
+        include,declaration,callback = list(),list(),list()
+        for sub in range(number):
+            temp = ROSSubscriber.ROSSubscriber(self.class_name,"subscriber{}".format(sub),"/subscribed_topic{}".format(sub))
+            temp.createSubscriber()
+            include += temp.include
+            declaration += temp.declaration
+            callback += temp.callback
+
+        return include,declaration,callback
+
+    def createPublishers(self,number):
+        include,declaration = list(),list()
+        for pub in range(number):
+            temp = ROSPublisher.ROSPublisher("publisher{}".format(pub),"/published_topic{}".format(pub))
+            temp.createPublisher()
+            include += temp.include
+            declaration += temp.declaration
+
+        return include,declaration
+
+    def appendSeperator(self,list):
+        return [line+'\n' for line in list]

@@ -21,26 +21,13 @@ namespace namespace_template
      */
     bool readParameters();
 
-    /*!
-     * Odometry callback method.
-     * @param t_Odom the received message.
-     */
-    void subCallback(const std_msgs::String &t_msg);
-
     //! ROS node handle.
     ros::NodeHandle &m_node_handle;
 
-    //! Input topic name.
-    std::string m_input_topic;
+    //! Example parameter.
+    std::string m_param;
 
-    //! Output topic name.
-    std::string m_output_topic;
-
-    //! Input subscriber.
-    ros::Subscriber m_input_sub;
-
-    //! Output publisher.
-    ros::Publisher m_output_pub;
+    //--->Include insertion point <---
   };
 
 } // namespace namespace_template
