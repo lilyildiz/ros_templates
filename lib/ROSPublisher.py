@@ -1,14 +1,10 @@
-class MessageType:
-    def __init__(self) -> None:
-        self.package = 'std_msgs'
-        self.type = 'String'
-
 class ROSPublisher:
-    def __init__(self,name,topic) -> None:
-        self.name = name
-        self.topic = topic
+    def __init__(self) -> None:
+        self.name = None
+        self.topic = None
         self.queue = 1000
-        self.message_type = MessageType()
+        self.message_type_package = None
+        self.message_type_type = None
         self.include = None
         self.declaration = None
 
@@ -17,8 +13,8 @@ class ROSPublisher:
         filedata = filedata.replace('publisher_name_template', self.name)
         filedata = filedata.replace('topic_template', self.topic)
         filedata = filedata.replace('queue_template', str(self.queue))
-        filedata = filedata.replace('message_package_template', self.message_type.package)
-        filedata = filedata.replace('message_type_template',self.message_type.type)
+        filedata = filedata.replace('message_package_template', self.message_type_package)
+        filedata = filedata.replace('message_type_template',self.message_type_type)
         return filedata
 
     def createPublisher(self):

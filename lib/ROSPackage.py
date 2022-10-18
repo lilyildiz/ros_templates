@@ -1,16 +1,16 @@
 import subprocess
 from . import ROSSubscriber
 from . import ROSPublisher
+from . import menu
 
 
 class ROSPackage:
-    def __init__(self) -> None:
-        self.package_name = str()
-        self.node_name = str()
-        self.class_name = str()
-        self.namespace_name = str()
-        self.subscriber_amount = int()
-        self.publisher_amount = int()
+    def __init__(self,options) -> None:
+        self.options = options
+        self.package_name = options.package_name
+        self.node_name = options.node_name
+        self.class_name = options.class_name
+        self.namespace_name = options.namespace_name
 
     def fill_template(self, filedata):
         filedata = filedata.replace('package_name_template', self.package_name)
@@ -20,8 +20,8 @@ class ROSPackage:
         return filedata
 
     def create_node(self):
-        sub_include,sub_declaration,callback = self.createSubscribers(self.subscriber_amount)
-        pub_include,pub_declaration = self.createPublishers(self.publisher_amount)
+        sub_include,sub_declaration,callback = self.createSubscribers()
+        pub_include,pub_declaration = self.createPublishers()
 
         # Create node file
         with open('templates/node_template.cpp', 'r') as file:
@@ -94,24 +94,22 @@ class ROSPackage:
         subprocess.run(["cp templates/config_template.yaml {}/config/{}_config.yaml".format(
             self.package_name, self.node_name)], shell=True)
 
-    def createSubscribers(self,number):
+    def createSubscribers(self):
         include,declaration,callback = list(),list(),list()
-        for sub in range(number):
-            temp = ROSSubscriber.ROSSubscriber(self.class_name,"subscriber{}".format(sub),"/subscribed_topic{}".format(sub))
-            temp.createSubscriber()
-            include += temp.include
-            declaration += temp.declaration
-            callback += temp.callback
+        for sub in self.options.subscribers[:-1]:
+            sub.createSubscriber()
+            include += sub.include
+            declaration += sub.declaration
+            callback += sub.callback
 
         return include,declaration,callback
 
-    def createPublishers(self,number):
+    def createPublishers(self):
         include,declaration = list(),list()
-        for pub in range(number):
-            temp = ROSPublisher.ROSPublisher("publisher{}".format(pub),"/published_topic{}".format(pub))
-            temp.createPublisher()
-            include += temp.include
-            declaration += temp.declaration
+        for pub in self.options.publishers[:-1]:
+            pub.createPublisher()
+            include += pub.include
+            declaration += pub.declaration
 
         return include,declaration
 

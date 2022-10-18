@@ -1,15 +1,11 @@
-class MessageType:
-    def __init__(self) -> None:
-        self.package = 'std_msgs'
-        self.type = 'String'
-
 class ROSSubscriber:
-    def __init__(self,parent_name,name,topic) -> None:
-        self.parent = parent_name
-        self.name = name
-        self.topic = topic
+    def __init__(self) -> None:
+        self.parent = None
+        self.name = None
+        self.topic = None
         self.freq = 10
-        self.message_type = MessageType()
+        self.message_type_package = None
+        self.message_type_type = None
         self.include = None
         self.declaration = None
         self.callback = None
@@ -19,8 +15,8 @@ class ROSSubscriber:
         filedata = filedata.replace('subscriber_name_template', self.name)
         filedata = filedata.replace('topic_template', self.topic)
         filedata = filedata.replace('freq_template', str(self.freq))
-        filedata = filedata.replace('message_package_template', self.message_type.package)
-        filedata = filedata.replace('message_type_template',self.message_type.type)
+        filedata = filedata.replace('message_package_template', self.message_type_package)
+        filedata = filedata.replace('message_type_template',self.message_type_type)
         return filedata
 
     def createSubscriber(self):
