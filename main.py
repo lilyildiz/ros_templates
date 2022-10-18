@@ -1,4 +1,3 @@
-import blessed
 import subprocess
 import lib.ROSPackage
 import lib.menu
