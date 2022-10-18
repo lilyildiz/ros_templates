@@ -7,6 +7,7 @@ class ROSPublisher:
         self.message_type_type = None
         self.include = None
         self.declaration = None
+        self.headers = None
 
 
     def fill_template(self,filedata):
@@ -27,5 +28,6 @@ class ROSPublisher:
         filedata = filedata.splitlines()
 
         self.include = filedata[:3]
-        self.declaration = filedata[3:]
+        self.declaration = filedata[3:6]
+        self.headers = filedata[7:]
 

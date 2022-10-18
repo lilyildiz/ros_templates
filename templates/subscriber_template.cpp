@@ -14,3 +14,4 @@
         ROS_INFO("subscriber_name_template recieved a message");
     }
 
+#include <message_package_template/message_type_template.h>

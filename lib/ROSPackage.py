@@ -1,3 +1,4 @@
+from email import header
 import subprocess
 from . import ROSSubscriber
 from . import ROSPublisher
@@ -20,8 +21,8 @@ class ROSPackage:
         return filedata
 
     def create_node(self):
-        sub_include,sub_declaration,callback = self.createSubscribers()
-        pub_include,pub_declaration = self.createPublishers()
+        sub_include,sub_declaration,callback,sub_headers = self.createSubscribers()
+        pub_include,pub_declaration,pub_headers = self.createPublishers()
 
         # Create node file
         with open('templates/node_template.cpp', 'r') as file:
@@ -55,6 +56,7 @@ class ROSPackage:
         filedata = filedata.splitlines()
         include_index = [i for i, s in enumerate(filedata) if '--->Include insertion point <---' in s][0]
         filedata[include_index:include_index+1] = pub_include + sub_include
+        filedata[3:4] = sub_headers + pub_headers
 
         with open('{}/include/{}.h'.format(self.package_name, self.node_name), 'w') as file:
             file.writelines(self.appendSeperator(filedata))
@@ -101,8 +103,9 @@ class ROSPackage:
             include += sub.include
             declaration += sub.declaration
             callback += sub.callback
+            headers = sub.headers
 
-        return include,declaration,callback
+        return include,declaration,callback,headers
 
     def createPublishers(self):
         include,declaration = list(),list()
@@ -110,8 +113,9 @@ class ROSPackage:
             pub.createPublisher()
             include += pub.include
             declaration += pub.declaration
+            headers = pub.headers
 
-        return include,declaration
+        return include,declaration,headers
 
     def appendSeperator(self,list):
         return [line+'\n' for line in list]

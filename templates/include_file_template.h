@@ -1,7 +1,7 @@
 #pragma once
 
 #include <ros/ros.h>
-#include "std_msgs/String.h"
+
 
 namespace namespace_template
 {

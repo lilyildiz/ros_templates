@@ -9,6 +9,7 @@ class ROSSubscriber:
         self.include = None
         self.declaration = None
         self.callback = None
+        self.headers = None
 
     def fill_template(self,filedata):
         filedata = filedata.replace('class_name_template', self.parent)
@@ -30,4 +31,5 @@ class ROSSubscriber:
 
         self.include = filedata[:9]
         self.declaration = filedata[8:11]
-        self.callback = filedata[11:]
+        self.callback = filedata[11:16]
+        self.headers = filedata[16:]
