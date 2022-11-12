@@ -86,30 +86,6 @@ class ROSPackageOptions:
             </publisher>""".format(name=publisher.name, topic=publisher.topic, message_type_package=publisher.message_type_package, message_type_type=publisher.message_type_type)
         xml += """
         </publishers>
-        <services>"""
-        for service in self.services[:-1]:
-            xml += """
-            <service>
-                <name>{name}</name>
-            </service>""".format(name=service.name)
-        xml += """
-        </services>
-        <actions>"""
-        for action in self.actions[:-1]:
-            xml += """
-            <action>
-                <name>{name}</name>
-            </action>""".format(name=action.name)
-        xml += """
-        </actions>
-        <messages>"""
-        for message in self.messages[:-1]:
-            xml += """
-            <message>
-                <name>{name}</name>
-            </message>""".format(name=message.name)
-        xml += """
-        </messages>
     </package>"""
 
         with open(file_name, 'w') as f:
@@ -123,9 +99,9 @@ class ROSPackageOptions:
         self.namespace_name = xml.find('namespace').text
         self.subscriber_count = len(xml.find('subscribers').findall('subscriber'))
         self.publisher_count = len(xml.find('publishers').findall('publisher'))
-        self.service_count = len(xml.find('services').findall('service'))
-        self.action_count = len(xml.find('actions').findall('action'))
-        self.message_count = len(xml.find('messages').findall('message'))
+        # self.service_count = len(xml.find('services').findall('service'))
+        # self.action_count = len(xml.find('actions').findall('action'))
+        # self.message_count = len(xml.find('messages').findall('message'))
         subscriber = ROSSubscriber.ROSSubscriber()
         publisher = ROSPublisher.ROSPublisher()
         service = ROSService()
@@ -151,18 +127,18 @@ class ROSPackageOptions:
             publisher.message_type_package = xml_publisher.find('message_type_package').text
             publisher.message_type_type = xml_publisher.find('message_type_type').text
             self.publishers.insert(0,publisher)
-        for xml_service in xml.find('services').findall('service'):
-            service = ROSService()
-            service.name = xml_service.find('name').text
-            self.services.insert(0,service)
-        for xml_action in xml.find('actions').findall('action'):
-            action = ROSAction()
-            action.name = xml_action.find('name').text
-            self.actions.insert(0,action)
-        for xml_message in xml.find('messages').findall('message'):
-            message = ROSMessage()
-            message.name = xml_message.find('name').text
-            self.messages.insert(0,message)  
+        # for xml_service in xml.find('services').findall('service'):
+        #     service = ROSService()
+        #     service.name = xml_service.find('name').text
+        #     self.services.insert(0,service)
+        # for xml_action in xml.find('actions').findall('action'):
+        #     action = ROSAction()
+        #     action.name = xml_action.find('name').text
+        #     self.actions.insert(0,action)
+        # for xml_message in xml.find('messages').findall('message'):
+        #     message = ROSMessage()
+        #     message.name = xml_message.find('name').text
+        #     self.messages.insert(0,message)  
 
 
 
@@ -620,8 +596,9 @@ def get_xml_options():
     menu.append_item(FunctionItem("Generate XML", generate_xml_file))
     return menu
 
-def get_ros_package_options(object) -> ROSPackageOptions:
-    menu = ConsoleMenu(title="ROS Template Generator", subtitle=root_menu_subtitle,exit_option_text='Create Package')
+def get_input_options():
+    object = ros_package_options
+    menu = ConsoleMenu(title="Edit Package", subtitle=root_menu_subtitle,exit_option_text='Go Back')
     menu.append_item(FunctionItem("Package Name", get_input_string, args=[object,'package_name']))
     menu.append_item(FunctionItem("Node Name", get_input_string, args=[object,'node_name']))
     menu.append_item(FunctionItem("Class Name", get_input_string, args=[object,'class_name']))
@@ -629,6 +606,16 @@ def get_ros_package_options(object) -> ROSPackageOptions:
 
     submenu_1 = add_remove_sub_pub_options()
     submenu_1 = SubmenuItem("Add/Remove Subscribers/Publishers", submenu_1)
+    submenu_1.set_menu(menu)
+
+    menu.append_item(submenu_1)
+    return menu
+
+def get_ros_package_options(object) -> ROSPackageOptions:
+    menu = ConsoleMenu(title="ROS Template Generator", subtitle=root_menu_subtitle,exit_option_text='Create Package')
+
+    submenu_1 = get_input_options()
+    submenu_1 = SubmenuItem("Edit Package", submenu_1)
     submenu_1.set_menu(menu)
 
     # Disabled for now
