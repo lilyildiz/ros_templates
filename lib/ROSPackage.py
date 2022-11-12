@@ -56,7 +56,12 @@ class ROSPackage:
         filedata = filedata.splitlines()
         include_index = [i for i, s in enumerate(filedata) if '--->Include insertion point <---' in s][0]
         filedata[include_index:include_index+1] = pub_include + sub_include
-        filedata[3:4] = sub_headers + pub_headers
+
+        headers = sub_headers + pub_headers
+        # Remove duplicates
+        headers = list(dict.fromkeys(headers))
+
+        filedata[3:4] = headers
 
         with open('{}/include/{}.h'.format(self.package_name, self.node_name), 'w') as file:
             file.writelines(self.appendSeperator(filedata))
