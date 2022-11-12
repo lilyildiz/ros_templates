@@ -105,6 +105,9 @@ class ROSPackage:
             callback += sub.callback
             headers = sub.headers
 
+        if len(self.options.subscribers) < 2:
+            return [" "],[" "],[" "],[" "]
+
         return include,declaration,callback,headers
 
     def createPublishers(self):
@@ -114,6 +117,9 @@ class ROSPackage:
             include += pub.include
             declaration += pub.declaration
             headers = pub.headers
+    
+        if len(self.options.publishers) < 2:
+            return [" "],[" "],[" "],[" "]
 
         return include,declaration,headers
 
