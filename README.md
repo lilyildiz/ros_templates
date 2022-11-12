@@ -6,7 +6,7 @@ This project is used for creating basic ROS package templates in C++.
 
 ## Dependencies
 
-`blessed`
+`console-menu`
 ## Package Example
 
 A package created by this project will basically look like this
@@ -27,22 +27,67 @@ basic_package/
         └── basic_node_main.cpp
 ```
 
+## Template
 
+The basic template can be seen below. You can edit the template to your requirements and choose `XML Options` in the root menu to load your settings.
 
+Another way to customize your package is the `Edit Package` section in the root menu. (not reccomended)
 
-## To Do
+``` 
+<?xml version="1.0"?>
+    <package>
+        <name>basic_package</name>
+        <node>basic_node</node>
+        <class>BasicNode</class>
+        <namespace>BasicNamespace</namespace>
+        <subscribers>
+            <subscriber>
+                <parent>BasicNode</parent>
+                <name>BasicSub1</name>
+                <topic>/foo</topic>
+                <message_type_package>std_msgs</message_type_package>
+                <message_type_type>Float64</message_type_type>
+            </subscriber>
+            <subscriber>
+                <parent>BasicNode</parent>
+                <name>BasicSub2</name>
+                <topic>/foo</topic>
+                <message_type_package>std_msgs</message_type_package>
+                <message_type_type>Float64</message_type_type>
+            </subscriber>
+        </subscribers>
+        <publishers>
+            <publisher>
+                <name>BasicPub</name>
+                <topic>/foo2</topic>
+                <message_type_package>std_msgs</message_type_package>
+                <message_type_type>String</message_type_type>
+            </publisher>
+        </publishers>
+    </package>
+```
 
-- Support for creating more than 1 node.
+| Package Options | Description                 |
+| :-------------- | :-------------------------- |
+| name            | Package name                |
+| node            | Node name                   |
+| class           | Class name of the node      |
+| namespace       | Namespace name of the class |
 
-- <del>Support for creating more than 1 subscriber or publisher.</del>
+| Subscriber Options | Description                             |
+| :----------------- | :-------------------------------------- |
+| parent             | Parent class name for callback function |
+| name               | Subscriber name                         |
+| topic              | Topic name                              |
+| msg_type_package   | Package name of the message type        |
+| msg_type_type      | Message type name                       |
 
-- Support for creating action servers.
-
-- Support for creating services.
-
-- Support for generating custom ROS messages.
-
-
+| Publisher Options | Description                      |
+| :---------------- | :------------------------------- |
+| name              | Publisher name                   |
+| topic             | Topic name                       |
+| msg_type_package  | Package name of the message type |
+| msg_type_type     | Message type name                |
 
 ## Authors
 
