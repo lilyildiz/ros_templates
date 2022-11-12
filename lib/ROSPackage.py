@@ -1,4 +1,3 @@
-from email import header
 import subprocess
 from . import ROSSubscriber
 from . import ROSPublisher
@@ -94,7 +93,7 @@ class ROSPackage:
 
         filedata = self.fill_template(filedata)
 
-        with open('{}/launch/{}_launch.launch'.format(self.package_name, self.node_name), 'w') as file:
+        with open('{}/launch/{}.launch'.format(self.package_name, self.node_name), 'w') as file:
             file.write(filedata)
 
         # Copy .yaml file

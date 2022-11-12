@@ -31,7 +31,7 @@ basic_package/
 
 The basic template can be seen below. You can edit the template to your requirements and choose `XML Options` in the root menu to load your settings.
 
-Another way to customize your package is the `Edit Package` section in the root menu. (not reccomended)
+Another way to customize your package is the `Edit Package` section in the root menu. (not recommended)
 
 ``` 
 <?xml version="1.0"?>
